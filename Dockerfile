@@ -64,6 +64,7 @@ RUN set -x \
 		--with-mysqli \
 		--with-pdo-mysql \
 		--with-openssl=/usr/local/ssl \
+		--with-zlib \
 	&& make -j"$(nproc)" \
 	&& make install \
 	&& dpkg -r bison libbison-dev \
@@ -77,4 +78,3 @@ WORKDIR /var/www/html
 
 EXPOSE 80
 CMD ["apache2-foreground"]
-
