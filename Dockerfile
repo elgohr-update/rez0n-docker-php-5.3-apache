@@ -1,7 +1,7 @@
 FROM buildpack-deps:jessie
 MAINTAINER Eugene Ware <eugene@noblesamurai.com>
 
-RUN apt-get update && apt-get install -y curl && rm -r /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y curl libcurl4-gnutls-dev && rm -r /var/lib/apt/lists/*
 
 ##<apache2>##
 RUN apt-get update && apt-get install -y apache2-bin apache2-dev apache2.2-common --no-install-recommends && rm -rf /var/lib/apt/lists/*
@@ -64,6 +64,7 @@ RUN set -x \
 		--with-mysqli \
 		--with-pdo-mysql \
 		--with-openssl=/usr/local/ssl \
+		--with-curl \
 		--with-zlib \
 	&& make -j"$(nproc)" \
 	&& make install \
