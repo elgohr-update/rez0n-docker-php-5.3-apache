@@ -1,10 +1,6 @@
 FROM buildpack-deps:jessie
-MAINTAINER Eugene Ware <eugene@noblesamurai.com>
 
-RUN apt-get update && apt-get install -y curl libcurl4-gnutls-dev && rm -r /var/lib/apt/lists/*
 
-##<apache2>##
-RUN apt-get update && apt-get install -y apache2-bin apache2-dev apache2.2-common --no-install-recommends && rm -rf /var/lib/apt/lists/*
 ENV PHP_VERSION 5.3.29
 ENV PHP_INI_DIR /usr/local/etc/php
 RUN set -eux; \
@@ -15,16 +11,17 @@ RUN set -eux; \
 	chown www-data:www-data /var/www/html; \
 	chmod 777 /var/www/html
 
-RUN rm -rf /var/www/html && mkdir -p /var/lock/apache2 /var/run/apache2 /var/log/apache2 /var/www/html && chown -R www-data:www-data /var/lock/apache2 /var/run/apache2 /var/log/apache2 /var/www/html
+RUN apt-get update && apt-get install -y \
+	curl \
+	libcurl4-gnutls-dev \
+	libmcrypt-dev \
+	apache2-bin \
+	apache2-dev \
+	apache2.2-common \
+	&& rm -r /var/lib/apt/lists/*
 
 # Apache + PHP requires preforking Apache for best results
 RUN a2dismod mpm_event && a2enmod mpm_prefork
-
-RUN mv /etc/apache2/apache2.conf /etc/apache2/apache2.conf.dist
-COPY apache2.conf /etc/apache2/apache2.conf
-##</apache2>##
-
-RUN gpg --keyserver pgp.mit.edu --recv-keys 0B96609E270F565C13292B24C13C70B87267B52D 0A95E9A026542D53835E3F3A7DEC4E69FC9C83D7
 COPY ./configs/apache2.conf /etc/apache2/apache2.conf
 
 ENV GPG_KEYS 0B96609E270F565C13292B24C13C70B87267B52D 0A95E9A026542D53835E3F3A7DEC4E69FC9C83D7 0E604491
@@ -71,6 +68,13 @@ RUN set -x \
 		--with-openssl=/usr/local/ssl \
 		--with-curl \
 		--with-zlib \
+		--with-mcrypt \
+		--with-mbstring \
+		--with-zip \
+		--with-bz2 \
+		--with-exif \
+		--with-bcmath \
+		--with-gd \
 	&& make -j"$(nproc)" \
 	&& make install \
 	&& dpkg -r bison libbison-dev \
