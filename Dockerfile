@@ -5,6 +5,15 @@ RUN apt-get update && apt-get install -y curl libcurl4-gnutls-dev && rm -r /var/
 
 ##<apache2>##
 RUN apt-get update && apt-get install -y apache2-bin apache2-dev apache2.2-common --no-install-recommends && rm -rf /var/lib/apt/lists/*
+ENV PHP_VERSION 5.3.29
+ENV PHP_INI_DIR /usr/local/etc/php
+RUN set -eux; \
+	mkdir -p "$PHP_INI_DIR/conf.d"; \
+	# allow running as an arbitrary user (https://github.com/docker-library/php/issues/743)
+	[ ! -d /var/www/html ]; \
+	mkdir -p /var/www/html; \
+	chown www-data:www-data /var/www/html; \
+	chmod 777 /var/www/html
 
 RUN rm -rf /var/www/html && mkdir -p /var/lock/apache2 /var/run/apache2 /var/log/apache2 /var/www/html && chown -R www-data:www-data /var/lock/apache2 /var/run/apache2 /var/log/apache2 /var/www/html
 
@@ -34,11 +43,6 @@ RUN CFLAGS="-fPIC" && OPENSSL_VERSION="1.0.2d" \
       && cd /tmp/openssl \
       && ./config shared && make && make install \
       && rm -rf /tmp/*
-
-ENV PHP_VERSION 5.3.29
-
-ENV PHP_INI_DIR /usr/local/lib
-RUN mkdir -p $PHP_INI_DIR/conf.d
 
 # php 5.3 needs older autoconf
 RUN set -x \
@@ -73,6 +77,7 @@ RUN set -x \
   && make clean
 
 COPY ./scripts/docker-php-* apache2-foreground /usr/local/bin/
+COPY ./configs/php.ini* $PHP_INI_DIR/
 
 WORKDIR /var/www/html
 
