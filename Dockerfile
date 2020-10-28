@@ -1,5 +1,5 @@
 FROM buildpack-deps:jessie
-LABEL org.opencontainers.image.source https://github.com/rez0n/php-5.3-apache
+LABEL org.opencontainers.image.source https://github.com/rez0n/docker-php-5.3-apache
 
 
 ENV PHP_VERSION 5.3.29
@@ -70,7 +70,7 @@ RUN set -x \
 		--with-curl \
 		--with-zlib \
 		--with-mcrypt \
-		--with-mbstring \
+		--enable-mbstring \
 		--with-zip \
 		--with-bz2 \
 		--with-exif \
