@@ -80,6 +80,9 @@ RUN set -x \
 COPY ./scripts/docker-php-* apache2-foreground /usr/local/bin/
 COPY ./configs/php.ini* $PHP_INI_DIR/
 
+# Enable Apache2 mod_remoteip
+COPY ./configs/apache-remoteip.conf /etc/apache2/conf-enabled/remoteip.conf
+RUN a2enmod remoteip
 WORKDIR /var/www/html
 
 EXPOSE 80
