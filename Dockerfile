@@ -1,4 +1,5 @@
 FROM buildpack-deps:jessie
+LABEL org.opencontainers.image.source https://github.com/rez0n/php-5.3-apache
 
 
 ENV PHP_VERSION 5.3.29

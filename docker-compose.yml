@@ -1,0 +1,17 @@
+# docker-compose for local building, debugging and testing
+
+version: '3.1'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: nibrev/php-5.3-apache
+    network_mode: bridge
+    restart: always
+    volumes:
+      #- ./apache_vhost.conf:/etc/apache2/sites-enabled/000-default.conf
+      - ./index.php:/var/www/html/index.php
+    ports:
+      - "80:80"

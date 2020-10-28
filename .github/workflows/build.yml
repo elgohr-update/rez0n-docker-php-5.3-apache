@@ -1,0 +1,21 @@
+name: Build image
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    name: Build latest beta
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build and publish on Github (beta)
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+         name: rez0n/php-5.3-apache
+         registry: ghcr.io
+         username: "rez0n"
+         password: ${{ secrets.PAT }}
+         dockerfile: Dockerfile
+         tags: latest
