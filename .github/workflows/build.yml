@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build and publish on Github (beta)
-        uses: elgohr/Publish-Docker-Github-Action@master
+        uses: elgohr/Publish-Docker-Github-Action@v5
         with:
          name: rez0n/php-5.3-apache
          registry: ghcr.io
